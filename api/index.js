@@ -27,7 +27,7 @@ app.all('/', (req, res) => {
     // Generate the QR code with the specified errorCorrectionLevel
     QRCode.toDataURL(
       url,
-      { errorCorrectionLevel: errorCorrectionLevel || 'M' }, // Default to 'M' if not provided
+      { errorCorrectionLevel: errorCorrectionLevel || 'M', scale: 12, mode: 'alphanumeric' }, // Default to 'M' if not provided
       (err, qrCodeUrl) => {
         if (err) {
           console.error(err);
