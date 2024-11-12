@@ -1,12 +1,16 @@
 const express = require('express');
 const QRCode = require('qrcode');
+const path = require('path'); // Import path module
 const app = express();
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
 
-// Serve static files (e.g., CSS)
-app.use(express.static('public'));
+// Set the absolute path to the views directory
+app.set('views', path.join(__dirname, '../views'));
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Middleware to parse form data
 app.use(express.urlencoded({ extended: true }));
