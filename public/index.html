@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input, select {
+      padding: 10px;
+      font-size: 14px;
+      width: 300px;
+      margin-bottom: 10px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Code Generator</h1>
+  <form action="/generate" method="POST">
+    <input type="text" name="url" placeholder="Enter URL" required>
+
+    <br>
+
+    <label for="errorCorrectionLevel">Error Correction Level:</label>
+    <select name="errorCorrectionLevel" id="errorCorrectionLevel">
+      <option value="L">Low (L)</option>
+      <option value="M" selected="selected">Medium (M)</option>
+      <option value="Q">Quartile (Q)</option>
+      <option value="H">High (H)</option>
+    </select>
+
+    <br>
+
+    <!-- Hidden input to set encoding mode to alphanumeric -->
+    <input type="hidden" name="mode" value="alphanumeric">
+
+    <br>
+
+    <button type="submit">Generate QR Code</button>
+  </form>
+</body>
+</html>
