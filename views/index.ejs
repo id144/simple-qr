@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    input, select {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    img {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>QR Code Generator</h1>
+  <form action="/" method="GET">
+    <input type="text" name="url" placeholder="Enter URL" value="<%= url || '' %>" required>
+
+    <br>
+
+    <label for="errorCorrectionLevel">Error Correction Level:</label>
+    <select name="errorCorrectionLevel" id="errorCorrectionLevel">
+      <option value="L" <%= url && errorCorrectionLevel === 'L' ? 'selected' : '' %>>Low (L)</option>
+      <option value="M" <%= url && errorCorrectionLevel === 'M' ? 'selected' : '' %>>Medium (M)</option>
+      <option value="Q" <%= url && errorCorrectionLevel === 'Q' ? 'selected' : '' %>>Quartile (Q)</option>
+      <option value="H" <%= url && errorCorrectionLevel === 'H' ? 'selected' : '' %>>High (H)</option>
+    </select>
+
+    <br>
+
+    <!-- Hidden input to set encoding mode to alphanumeric -->
+    <input type="hidden" name="mode" value="alphanumeric">
+
+    <br>
+
+    <button type="submit">Generate QR Code</button>
+  </form>
+
+  <!-- Conditionally render the QR code if it's available -->
+  <% if (qrCodeSrc) { %>
+    <h2>QR Code for: <%= url %></h2>
+    <img src="<%= qrCodeSrc %>" alt="QR Code" style="image-rendering: pixelated;" />
+  <% } %>
+</body>
+</html>
