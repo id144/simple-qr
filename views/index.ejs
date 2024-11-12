@@ -4,57 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Code Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    input, select {
-      padding: 10px;
-      font-size: 16px;
-      width: 300px;
-      margin-bottom: 10px;
-    }
-    button {
-      padding: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    img {
-      margin-top: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <h1>QR Code Generator</h1>
-  <form action="/" method="GET">
-    <input type="text" name="url" placeholder="Enter URL" value="<%= url || '' %>" required>
+  <div class="container">
+    <h1>QR Code Generator</h1>
+    
+    <form action="/" method="POST">
+      <label for="url">Enter URL:</label>
+      <input type="text" id="url" name="url" placeholder="https://example.com" required>
 
-    <br>
+      <label for="errorCorrectionLevel">Error Correction Level:</label>
+      <select id="errorCorrectionLevel" name="errorCorrectionLevel">
+        <option value="L" <% if (errorCorrectionLevel === 'L') { %> selected <% } %>>L (Low, 7% recovery)</option>
+        <option value="M" <% if (errorCorrectionLevel === 'M') { %> selected <% } %>selected>M (Medium, 15% recovery)</option>
+        <option value="Q" <% if (errorCorrectionLevel === 'Q') { %> selected <% } %>>Q (Quartile, 25% recovery)</option>
+        <option value="H" <% if (errorCorrectionLevel === 'H') { %> selected <% } %>>H (High, 30% recovery)</option>
+      </select>
 
-    <label for="errorCorrectionLevel">Error Correction Level:</label>
-    <select name="errorCorrectionLevel" id="errorCorrectionLevel">
-      <option value="L" <%= url && errorCorrectionLevel === 'L' ? 'selected' : '' %>>Low (L)</option>
-      <option value="M" <%= url && errorCorrectionLevel === 'M' ? 'selected' : '' %>>Medium (M)</option>
-      <option value="Q" <%= url && errorCorrectionLevel === 'Q' ? 'selected' : '' %>>Quartile (Q)</option>
-      <option value="H" <%= url && errorCorrectionLevel === 'H' ? 'selected' : '' %>>High (H)</option>
-    </select>
+      <button type="submit">Generate QR Code</button>
+    </form>
 
-    <br>
+    <% if (qrCodeUrl) { %>
+      <h2>Your QR Code:</h2>
+      <img src="<%= qrCodeUrl %>" alt="Generated QR Code">
+    <% } %>
 
-    <!-- Hidden input to set encoding mode to alphanumeric -->
-    <input type="hidden" name="mode" value="alphanumeric">
-
-    <br>
-
-    <button type="submit">Generate QR Code</button>
-  </form>
-
-  <!-- Conditionally render the QR code if it's available -->
-  <% if (qrCodeSrc) { %>
-    <h2>QR Code for: <%= url %></h2>
-    <img src="<%= qrCodeSrc %>" alt="QR Code" style="image-rendering: pixelated;" />
-  <% } %>
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+  </div>
 </body>
 </html>

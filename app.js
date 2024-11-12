@@ -1,46 +1,47 @@
 const express = require('express');
-const path = require('path');
-const qrcode = require('qrcode');
-const ejs = require('ejs'); // Use EJS as the templating engine
-
+const QRCode = require('qrcode');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
 
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files (e.g., CSS)
+app.use(express.static('public'));
 
-// Root route to handle both form rendering and QR code generation
-app.get('/', (req, res) => {
-  const { url, errorCorrectionLevel, mode } = req.query;
+// Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
 
-  // If no URL is provided, just render the form without generating a QR code
-  if (!url) {
-    return res.render('index', { qrCodeSrc: null, url: null });
-  }
+// Handle both GET and POST requests on the root URL
+app.all('/', (req, res) => {
+  if (req.method === 'POST') {
+    const { url, errorCorrectionLevel } = req.body;
 
-  // Options for QR code generation
-  const qrOptions = {
-    errorCorrectionLevel: errorCorrectionLevel || 'M', // Default to 'M' (Medium) if not provided
-    mode: mode || 'alphanumeric',  // Default to 'alphanumeric' mode
-    scale: 3,  // Triple the size of the QR code
-    margin: 2, // Optional: Add some margin around the QR code
-  };
-
-  // Generate QR code with the provided options
-  qrcode.toDataURL(url, qrOptions, (err, src) => {
-    if (err) {
-      return res.status(500).send('Error generating QR Code');
+    if (!url) {
+      return res.render('index', { qrCodeUrl: null, error: 'Please provide a valid URL.', errorCorrectionLevel: 'M' });
     }
 
-    // Render the page with the generated QR code
-    res.render('index', { qrCodeSrc: src, url });
-  });
+    // Generate the QR code with the specified errorCorrectionLevel
+    QRCode.toDataURL(
+      url,
+      { errorCorrectionLevel: errorCorrectionLevel || 'M' , scale: 12, mode: 'alphanumeric'}, // Default to 'M' if not provided
+      (err, qrCodeUrl) => {
+        if (err) {
+          console.error(err);
+          return res.render('index', { qrCodeUrl: null, error: 'Failed to generate QR code.', errorCorrectionLevel });
+        }
+
+        // Render the QR code on the page
+        res.render('index', { qrCodeUrl, error: null, errorCorrectionLevel });
+      }
+    );
+  } else {
+    // Render the initial form with no QR code and default error correction level 'M'
+    res.render('index', { qrCodeUrl: null, error: null, errorCorrectionLevel: 'M' });
+  }
 });
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`QR Code Generator app is running at http://localhost:${port}`);
 });
