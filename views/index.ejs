@@ -17,7 +17,7 @@
       <label for="errorCorrectionLevel">Error Correction Level:</label>
       <select id="errorCorrectionLevel" name="errorCorrectionLevel">
         <option value="L" <% if (errorCorrectionLevel === 'L') { %> selected <% } %>>L (Low, 7% recovery)</option>
-        <option value="M" <% if (errorCorrectionLevel === 'M') { %> selected <% } %>selected>M (Medium, 15% recovery)</option>
+        <option value="M" <% if (errorCorrectionLevel === 'M') { %> selected <% } %> selected>M (Medium, 15% recovery)</option>
         <option value="Q" <% if (errorCorrectionLevel === 'Q') { %> selected <% } %>>Q (Quartile, 25% recovery)</option>
         <option value="H" <% if (errorCorrectionLevel === 'H') { %> selected <% } %>>H (High, 30% recovery)</option>
       </select>
@@ -26,8 +26,11 @@
     </form>
 
     <% if (qrCodeUrl) { %>
-      <h2>Your QR Code for <%= url %>:</h2>
+      <h2>Your QR Code:</h2>
       <img src="<%= qrCodeUrl %>" alt="Generated QR Code">
+
+      <h3>URL:</h3>
+      <p><a href="<%= originalUrl %>" target="_blank"><%= originalUrl %></a></p>
     <% } %>
 
     <% if (error) { %>

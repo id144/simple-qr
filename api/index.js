@@ -1,6 +1,6 @@
 const express = require('express');
 const QRCode = require('qrcode');
-const path = require('path'); // Import path module
+const path = require('path');
 const app = express();
 
 // Set EJS as the templating engine
@@ -21,7 +21,7 @@ app.all('/', (req, res) => {
     const { url, errorCorrectionLevel } = req.body;
 
     if (!url) {
-      return res.render('index', { qrCodeUrl: null, error: 'Please provide a valid URL.', errorCorrectionLevel: 'M' });
+      return res.render('index', { qrCodeUrl: null, originalUrl: null, error: 'Please provide a valid URL.', errorCorrectionLevel: 'M' });
     }
 
     // Generate the QR code with the specified errorCorrectionLevel
@@ -31,16 +31,16 @@ app.all('/', (req, res) => {
       (err, qrCodeUrl) => {
         if (err) {
           console.error(err);
-          return res.render('index', { qrCodeUrl: null, error: 'Failed to generate QR code.', errorCorrectionLevel });
+          return res.render('index', { qrCodeUrl: null, originalUrl: null, error: 'Failed to generate QR code.', errorCorrectionLevel });
         }
 
-        // Render the QR code on the page
-        res.render('index', { qrCodeUrl, error: null, errorCorrectionLevel });
+        // Render the QR code and the original URL on the page
+        res.render('index', { qrCodeUrl, originalUrl: url, error: null, errorCorrectionLevel });
       }
     );
   } else {
     // Render the initial form with no QR code and default error correction level 'M'
-    res.render('index', { qrCodeUrl: null, error: null, errorCorrectionLevel: 'M' });
+    res.render('index', { qrCodeUrl: null, originalUrl: null, error: null, errorCorrectionLevel: 'M' });
   }
 });
 
