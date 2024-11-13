@@ -12,16 +12,19 @@
     
     <form action="/" method="POST">
       <label for="url">Enter URL:</label>
-      <input type="text" id="url" name="url" placeholder="https://example.com" required>
-
-      <label for="errorCorrectionLevel">Error Correction Level:</label>
+      <input type="text" id="url" name="url" placeholder="https://mozartmuseum.cz" required>
+	<br>	
+      <label for="errorCorrectionLevel">Correction Level:</label>
       <select id="errorCorrectionLevel" name="errorCorrectionLevel">
         <option value="L" <% if (errorCorrectionLevel === 'L') { %> selected <% } %>>L (Low, 7% recovery)</option>
         <option value="M" <% if (errorCorrectionLevel === 'M') { %> selected <% } %> selected>M (Medium, 15% recovery)</option>
         <option value="Q" <% if (errorCorrectionLevel === 'Q') { %> selected <% } %>>Q (Quartile, 25% recovery)</option>
         <option value="H" <% if (errorCorrectionLevel === 'H') { %> selected <% } %>>H (High, 30% recovery)</option>
       </select>
-
+	<br>
+      <label for="QRSize">QR code size:</label>
+	<input type="range" id="QRSize" name="QRSize" min="8" max="128" value="32" />
+	
       <button type="submit">Generate QR Code</button>
     </form>
 
