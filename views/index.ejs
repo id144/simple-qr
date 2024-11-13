@@ -7,14 +7,13 @@
   <link rel="stylesheet" href="/style.css">
 </head>
 <script>
-var slider = document.getElementById("QRSize");
-var output = document.getElementById("QRSizeValue");
-output.innerHTML = slider.value; // Display the default slider value
+var value = document.getElementById("QRSize");
+var input = document.getElementById("QRSizeValue");
+value.textContent = input.value;
+input.addEventListener("input", (event) => {
+  value.textContent = event.target.value;
+});
 
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  output.innerHTML = this.value;
-}
 </script>
 <body>
   <div class="container">
@@ -33,8 +32,8 @@ slider.oninput = function() {
       </select>
 	<br>
       <label for="QRSize">QR code size:</label>
-	<input type="range" id="QRSize" name="QRSize" min="8" max="128" value="32" />
-	<span id="QRSizeValue">32</span>
+	<input type="range" id="QRSize" name="QRSize" min="4" max="32" value="16" step="2"/>
+	<p>Value: <output id="QRSizeValue"></output></p>
       <button type="submit">Generate QR Code</button>
     </form>
 
