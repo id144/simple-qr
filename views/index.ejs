@@ -11,7 +11,7 @@ window.onload=function(){
   var qr_size_slider = document.getElementById("QRSize");
   var qr_size_value = document.getElementById("QRSizeValue");
   qr_size_value.textContent = qr_size_slider.value;
-  input.addEventListener("qr_size_slider", (event) => {
+  qr_size_slider.addEventListener("input", (event) => {
     qr_size_value.textContent = qr_size_slider.value;
   });
 };
