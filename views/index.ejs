@@ -6,6 +6,16 @@
   <title>QR Code Generator</title>
   <link rel="stylesheet" href="/style.css">
 </head>
+<script>
+var slider = document.getElementById("QRSize");
+var output = document.getElementById("QRSizeValue");
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}
+</script>
 <body>
   <div class="container">
     <h1>QR Code Generator</h1>
@@ -24,7 +34,7 @@
 	<br>
       <label for="QRSize">QR code size:</label>
 	<input type="range" id="QRSize" name="QRSize" min="8" max="128" value="32" />
-	
+	<span id="QRSizeValue">32</span>
       <button type="submit">Generate QR Code</button>
     </form>
 

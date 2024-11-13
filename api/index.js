@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // Handle both GET and POST requests on the root URL
 app.all('/', (req, res) => {
   if (req.method === 'POST') {
-    const { url, errorCorrectionLevel } = req.body;
+    const { url, errorCorrectionLevel, QRSize  } = req.body;
 
     if (!url) {
       return res.render('index', { qrCodeUrl: null, originalUrl: null, error: 'Please provide a valid URL.', errorCorrectionLevel: 'M' });
