@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^4.21.1",
