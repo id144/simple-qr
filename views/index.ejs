@@ -20,21 +20,21 @@ window.onload=function(){
 <body>
   <div class="container">
     <h1>QR Code Generator</h1>
-    
+
     <form action="/" method="POST">
       <label for="url">Enter URL:</label>
-      <input type="text" id="url" name="url" placeholder="https://mozartmuseum.cz" value="https://mozartmuseum.cz" required>
-	<br>	
+      <input type="text" id="url" name="url" placeholder="https://mozartmuseum.cz" value="<%= url %>" required>
+	<br>
       <label for="errorCorrectionLevel">Correction Level:</label>
       <select id="errorCorrectionLevel" name="errorCorrectionLevel">
         <option value="L" <% if (errorCorrectionLevel === 'L') { %> selected <% } %>>L (Low, 7% recovery)</option>
-        <option value="M" <% if (errorCorrectionLevel === 'M') { %> selected <% } %> selected>M (Medium, 15% recovery)</option>
+        <option value="M" <% if (errorCorrectionLevel === 'M') { %> selected <% } %>>M (Medium, 15% recovery)</option>
         <option value="Q" <% if (errorCorrectionLevel === 'Q') { %> selected <% } %>>Q (Quartile, 25% recovery)</option>
         <option value="H" <% if (errorCorrectionLevel === 'H') { %> selected <% } %>>H (High, 30% recovery)</option>
       </select>
 	<br>
       <label for="QRSize">QR code size:</label>
-	<input type="range" id="QRSize" name="QRSize" min="4" max="32" value="16" step="2"/>
+	<input type="range" id="QRSize" name="QRSize" min="4" max="32" value="<%= QRSize %>" step="2"/>
 	<p>Value: <output id="QRSizeValue"></output></p>
       <button type="submit">Generate QR Code</button>
     </form>
@@ -44,7 +44,21 @@ window.onload=function(){
       <img src="<%= qrCodeUrl %>" alt="Generated QR Code" download="qr_code_mim.png">
 
       <h3>URL:</h3>
-      <p><a href="<%= originalUrl %>" target="_blank"><%= originalUrl %></a></p>
+      <p><a href="<%= url %>" target="_blank"><%= url %></a></p>
+    <% } %>
+
+    <% if (stats) { %>
+      <h3>Technical details:</h3>
+      <div class="stats">
+        <% stats.forEach(function (section) { %>
+          <table>
+            <caption><%= section.title %></caption>
+            <% section.rows.forEach(function (row) { %>
+              <tr><th><%= row[0] %></th><td><%= row[1] %></td></tr>
+            <% }) %>
+          </table>
+        <% }) %>
+      </div>
     <% } %>
 
     <% if (error) { %>

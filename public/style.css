@@ -3,7 +3,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  margin: 0;
   background-color: #f4f4f4;
 }
 
@@ -38,4 +39,53 @@ button:hover {
 
 .error {
   color: red;
+}
+
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 640px;
+  margin: 20px 16px;
+}
+
+input[type="text"] {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.container img {
+  max-width: 100%;
+  height: auto;
+}
+
+.stats table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.stats caption {
+  font-weight: bold;
+  text-align: left;
+  padding: 4px 0;
+}
+
+.stats th,
+.stats td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #eee;
+  vertical-align: top;
+}
+
+.stats th {
+  font-weight: normal;
+  color: #555;
+  width: 40%;
+}
+
+.stats td {
+  font-family: Consolas, monospace;
+  word-break: break-word;
 }
