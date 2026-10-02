@@ -14,6 +14,16 @@ window.onload=function(){
   qr_size_slider.addEventListener("input", (event) => {
     qr_size_value.textContent = qr_size_slider.value;
   });
+
+  var stats_toggle = document.getElementById("statsToggle");
+  var stats = document.getElementById("stats");
+  if (stats_toggle && stats) {
+    stats_toggle.addEventListener("click", () => {
+      stats.hidden = !stats.hidden;
+      stats_toggle.setAttribute("aria-expanded", String(!stats.hidden));
+      stats_toggle.textContent = stats.hidden ? "Show technical details" : "Hide technical details";
+    });
+  }
 };
 
 </script>
@@ -41,15 +51,20 @@ window.onload=function(){
 
     <% if (qrCodeUrl) { %>
       <h2>Your QR Code:</h2>
-      <img src="<%= qrCodeUrl %>" alt="Generated QR Code" download="qr_code_mim.png">
+      <img src="<%= qrCodeUrl %>" alt="Generated QR Code">
+
+      <div class="downloads">
+        <a class="button" href="<%= qrCodeUrl %>" download="qr_code_mim.png">Download PNG</a>
+        <a class="button" href="<%= svgUrl %>" download="qr_code_mim.svg">Download SVG</a>
+      </div>
 
       <h3>URL:</h3>
       <p><a href="<%= url %>" target="_blank"><%= url %></a></p>
     <% } %>
 
     <% if (stats) { %>
-      <h3>Technical details:</h3>
-      <div class="stats">
+      <button type="button" id="statsToggle" class="secondary" aria-expanded="false" aria-controls="stats">Show technical details</button>
+      <div class="stats" id="stats" hidden>
         <% stats.forEach(function (section) { %>
           <table>
             <caption><%= section.title %></caption>

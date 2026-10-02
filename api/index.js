@@ -43,7 +43,7 @@ const MASK_FORMULAS = [
 const pct = (part, whole) => (100 * part / whole).toFixed(1) + '%';
 
 // Collect as many technical details as possible about a generated QR symbol
-function describeQRCode(text, qr, eclName, scale, pngBytes, dataUrlLength, elapsedMs) {
+function describeQRCode(text, qr, eclName, scale, image) {
   const version = qr.version;
   const ecl = qr.errorCorrectionLevel;
   const size = qr.modules.size;
@@ -148,12 +148,13 @@ function describeQRCode(text, qr, eclName, scale, pngBytes, dataUrlLength, elaps
     {
       title: 'Image',
       rows: [
-        ['Format', 'PNG'],
+        ['Formats', 'PNG (raster), SVG (vector)'],
         ['Pixels per module', scale],
         ['Image size', `${imageSide} × ${imageSide} px`],
-        ['PNG file size', `${pngBytes.toLocaleString('en-US')} bytes`],
-        ['Data URL length', `${dataUrlLength.toLocaleString('en-US')} chars`],
-        ['Generation time', `${elapsedMs.toFixed(1)} ms`]
+        ['PNG file size', `${image.pngBytes.toLocaleString('en-US')} bytes`],
+        ['SVG file size', `${image.svgBytes.toLocaleString('en-US')} bytes`],
+        ['PNG data URL length', `${image.dataUrlLength.toLocaleString('en-US')} chars`],
+        ['Generation time', `${image.elapsedMs.toFixed(1)} ms`]
       ]
     }
   ];
@@ -163,7 +164,7 @@ function describeQRCode(text, qr, eclName, scale, pngBytes, dataUrlLength, elaps
 app.all('/', async (req, res) => {
   if (req.method !== 'POST') {
     // Render the initial form with default values
-    return res.render('index', { ...DEFAULTS, qrCodeUrl: null, stats: null, error: null });
+    return res.render('index', { ...DEFAULTS, qrCodeUrl: null, svgUrl: null, stats: null, error: null });
   }
 
   // Keep the submitted values so the form can be re-used for the next iteration
@@ -175,28 +176,37 @@ app.all('/', async (req, res) => {
   const formValues = { url, errorCorrectionLevel, QRSize };
 
   if (!url) {
-    return res.render('index', { ...formValues, qrCodeUrl: null, stats: null, error: 'Please provide a valid URL.' });
+    return res.render('index', { ...formValues, qrCodeUrl: null, svgUrl: null, stats: null, error: 'Please provide a valid URL.' });
   }
 
   try {
     const started = process.hrtime.bigint();
     const qr = QRCode.create(url, { errorCorrectionLevel });
-    const qrCodeUrl = await QRCode.toDataURL(url, {
+    const renderOptions = {
       errorCorrectionLevel,
       version: qr.version,
       maskPattern: qr.maskPattern,
-      margin: QUIET_ZONE,
-      scale: QRSize
-    });
+      margin: QUIET_ZONE
+    };
+    const qrCodeUrl = await QRCode.toDataURL(url, { ...renderOptions, scale: QRSize });
+    // SVG gets the same nominal pixel size as the PNG, but scales without loss
+    const imageSide = (qr.modules.size + QUIET_ZONE * 2) * QRSize;
+    const svg = await QRCode.toString(url, { ...renderOptions, type: 'svg', width: imageSide });
+    const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     const elapsedMs = Number(process.hrtime.bigint() - started) / 1e6;
-    const pngBytes = Buffer.from(qrCodeUrl.split(',')[1], 'base64').length;
-    const stats = describeQRCode(url, qr, errorCorrectionLevel, QRSize, pngBytes, qrCodeUrl.length, elapsedMs);
+
+    const stats = describeQRCode(url, qr, errorCorrectionLevel, QRSize, {
+      pngBytes: Buffer.from(qrCodeUrl.split(',')[1], 'base64').length,
+      svgBytes: Buffer.byteLength(svg, 'utf8'),
+      dataUrlLength: qrCodeUrl.length,
+      elapsedMs
+    });
 
     // Render the QR code, its technical details and the original input on the page
-    res.render('index', { ...formValues, qrCodeUrl, stats, error: null });
+    res.render('index', { ...formValues, qrCodeUrl, svgUrl, stats, error: null });
   } catch (err) {
     console.error(err);
-    res.render('index', { ...formValues, qrCodeUrl: null, stats: null, error: 'Failed to generate QR code: ' + err.message });
+    res.render('index', { ...formValues, qrCodeUrl: null, svgUrl: null, stats: null, error: 'Failed to generate QR code: ' + err.message });
   }
 });
 

@@ -37,6 +37,38 @@ button:hover {
   background-color: #0056b3;
 }
 
+.downloads {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+a.button {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+a.button:hover {
+  background-color: #0056b3;
+}
+
+button.secondary {
+  background-color: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+  margin: 10px 0 16px;
+}
+
+button.secondary:hover {
+  background-color: #eef5ff;
+}
+
 .error {
   color: red;
 }
